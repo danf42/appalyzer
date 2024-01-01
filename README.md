@@ -15,6 +15,8 @@ Appalyzer currently supports scanning for secrets in:
 
 Appalyzer uses a JSON formatted list of Python-friendly regular expressions to search for interesting data.  The current list of regular expressions are based on common regexes used in other tools, bug bounty programs, etc.  Decompiling of apps attempts to use industry standard tools to do the heavy lifting.  If no tools is specified, the application will attempt to just read the file in.  Once the application is decompiled and processed, the application will search search for secrets and sensitive data based on the regular expressions supplied.
 
+![Appalyzer Design](assets/appalyzer.drawio.png)
+
 ### Android (apk) and Java Archive Files (jar)
 
 - Uses JADX to decompile the apk file
