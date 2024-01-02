@@ -17,7 +17,8 @@ class ZipAnalyzer(Appalyzer):
         """
 
         # Create the temp directory
-        self._outdir = self._outdir.joinpath(f"{self.app.stem}", f"{self.app.stem}_{self._time_now}")
+        self._outdir = self._outdir.joinpath(f"{self.app.stem}", \
+                                             f"{self.app.stem}_{self._time_now}")
         self._outdir.mkdir(parents=True, exist_ok=True)
 
         # Unzip file to self_outdir
@@ -39,4 +40,3 @@ class ZipAnalyzer(Appalyzer):
 
          # Start searching for secrets
         self._search(self._outdir)
-        

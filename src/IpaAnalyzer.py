@@ -3,9 +3,9 @@ import logging
 from zipfile import ZipFile
 import plistlib
 import json
-import magic
 from datetime import date, datetime
 from pathlib import Path
+import magic
 from Appalyzer import Appalyzer
 
 class IpaAnalyzer(Appalyzer):
@@ -17,7 +17,7 @@ class IpaAnalyzer(Appalyzer):
 
     MACO_EXE_MAGIC = "Mach-O 64-bit arm64"
 
-    def __init__(self, app:str, regexfile:str=None) -> None:        
+    def __init__(self, app:str, regexfile:str=None) -> None:
         """        
         Parameters
         ----------
@@ -76,7 +76,7 @@ class IpaAnalyzer(Appalyzer):
                 pfiledata = plistlib.load(fd)
 
             except plistlib.InvalidFileException as e:
-                IpaAnalyzer.logger.error("[!] Error processing %s : %s", pfile, str(e))        
+                IpaAnalyzer.logger.error("[!] Error processing %s : %s", pfile, str(e))
 
             else:
                 IpaAnalyzer.logger.debug("[plistfile] Writing contentes to %s", outfile)
@@ -91,10 +91,11 @@ class IpaAnalyzer(Appalyzer):
         """
 
         # Create the temp directory
-        self._outdir = self._outdir.joinpath(f"{self.app.stem}", f"{self.app.stem}_{self._time_now}")
+        self._outdir = self._outdir.joinpath(f"{self.app.stem}", \
+                                             f"{self.app.stem}_{self._time_now}")
         self._outdir.mkdir(parents=True, exist_ok=True)
 
-        # Unzip ipa file to self_outdir   
+        # Unzip ipa file to self_outdir
         IpaAnalyzer.logger.info("Unzipping file...")
         unzipped_dir = self._outdir.joinpath("unzipped")
         zfile = ZipFile(self.app, mode='r')
@@ -115,7 +116,8 @@ class IpaAnalyzer(Appalyzer):
                 ext = Path(item).suffix
 
                 if IpaAnalyzer.MACO_EXE_MAGIC in m:
-                    IpaAnalyzer.logger.debug("Pricessing binary file:  %s in binary %s", {IpaAnalyzer.MACO_EXE_MAGIC}, item)
+                    IpaAnalyzer.logger.debug("Pricessing binary file:  %s in binary %s", \
+                                             {IpaAnalyzer.MACO_EXE_MAGIC}, item)
                     self._run_strings(item)
 
                 elif ext == ".plist":

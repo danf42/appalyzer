@@ -22,19 +22,18 @@ class DllAnalyzer(Appalyzer):
         # Create the temp directory
         self._outdir = self._outdir.joinpath(f"{self.app.stem}",
                                              f"{self.app.stem}_{self._time_now}")
-        
+
         self._outdir.mkdir(parents=True, exist_ok=True)
 
         # Get jadx binary path
         try:
             cmd_path = self._config.get_ilspycmd_path()
 
-        except FileNotFoundError as err:
+        except FileNotFoundError as _:
             DllAnalyzer.logger.error("[!] Could not find ilspycmd! Exiting..." )
-            sys.exit(1)
 
         else:
-            
+
             # Create the decompile command
             decompile_cmd = [str(cmd_path), "--outputdir", str(self._outdir), str(self.app)]
 
@@ -58,4 +57,3 @@ class DllAnalyzer(Appalyzer):
 
         # Start searching for secrets
         self._search(self._outdir)
-        

@@ -1,3 +1,4 @@
+"""Configuration Parser module"""
 import configparser
 from pathlib import Path
 import os
@@ -17,7 +18,6 @@ class AppAnalyzerConfig(object):
             cls._INSTANCE = super().__new__(cls)
 
         return cls._INSTANCE
-        
 
     def __init__(self, config_file:str = None):
         """        
@@ -31,8 +31,8 @@ class AppAnalyzerConfig(object):
         FileNotFoundError
             If configuration file is not found
         """
-           
-        if config_file is None:                  
+
+        if config_file is None:
             config_file = Path('config.ini')
 
         if not Path(config_file).is_file():
@@ -55,7 +55,7 @@ class AppAnalyzerConfig(object):
 
         """
         return cls._CONFIG_FILE.absolute()
-    
+
     @classmethod
     def get_config_value(cls, key: str) -> str:
         '''
@@ -63,7 +63,7 @@ class AppAnalyzerConfig(object):
         '''
         if key not in AppAnalyzerConfig._CONFIG['default']:
             raise Exception(f"{key} Not found in {AppAnalyzerConfig._CONFIG_FILE}")
-        
+
         return cls._CONFIG['default'][key]
 
 
@@ -86,10 +86,10 @@ class AppAnalyzerConfig(object):
         p = cls._CONFIG['default']['JADX_PATH']
 
         if not Path(p):
-             raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), p) 
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), p)
 
         return p
-    
+
     @classmethod
     def get_ilspycmd_path(cls) -> str:
         """
@@ -109,10 +109,10 @@ class AppAnalyzerConfig(object):
         p = cls._CONFIG['default']['ILSPYCMD_PATH']
 
         if not Path(p):
-             raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), p) 
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), p)
 
         return p
-    
+
     @classmethod
     def get_regex_path(cls) -> str:
         """
@@ -132,10 +132,10 @@ class AppAnalyzerConfig(object):
         p = cls._CONFIG['default']['REGEX_PATH']
 
         if not Path(p):
-             raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), p) 
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), p)
 
         return p
-    
+
     @classmethod
     def get_outdir_path(cls) -> str:
         """
@@ -155,6 +155,6 @@ class AppAnalyzerConfig(object):
         p = cls._CONFIG['default']['OUTDIR_PATH']
 
         if not Path(p):
-             raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), p) 
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), p)
 
         return p

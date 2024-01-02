@@ -1,17 +1,15 @@
 """Base class used to decompile and search for secrets in applications"""
 import threading
-import hashlib
 import datetime
 import json
 import shutil
 import re
 import logging
 import subprocess
-import os
 import hashlib
 from pathlib import Path
 from AppAnalyzerConfig import AppAnalyzerConfig
-from AppalyzerObjects import RegEx_Match_Position, RegEx_Match
+from AppalyzerObjects import RegExMatchPosition, RegExMatch
 
 
 class Appalyzer():
@@ -67,7 +65,9 @@ class Appalyzer():
         else:
             filesize = self.get_filesize(self.app, unit="mb")
             md5sum = self.__get_md5(self.app)
-            output = f"App: {self.app}\nFile Size: {filesize} mb\nLocation: {self.app.parent}\nMD5 Sum: {md5sum}"
+            output = f"App: {self.app}\nFile Size: {filesize} mb \
+                \nLocation: {self.app.parent} \
+                \nMD5 Sum: {md5sum}"
 
         return output
 
@@ -142,7 +142,7 @@ class Appalyzer():
 
         outfile = f"{afile}.strings"
 
-        Appalyzer.logger.debug("Running strings on %s", afile)        
+        Appalyzer.logger.debug("Running strings on %s", afile)
 
         with open(outfile, "w", encoding="utf-8") as fd:
             strcmd = ["strings", "-a", str(afile)]
@@ -178,7 +178,7 @@ class Appalyzer():
         return file_list
 
 
-    def _finder(self, pattern:str, file_list:list, parent_dir:str) -> dict[str, RegEx_Match]:
+    def _finder(self, pattern:str, file_list:list, parent_dir:str) -> dict[str, RegExMatch]:
         """
         Search through directory using regular expressions
 
@@ -223,14 +223,14 @@ class Appalyzer():
 
                             if h not in matches:
 
-                                    a_match = RegEx_Match(rel_path=rel_path,
-                                                        line_match=line.strip(),
-                                                        regex_match=mo.group(),
-                                                        match_pos=RegEx_Match_Position(
-                                                            mo.start(), 
-                                                            mo.end()))
-                                                                        
-                                    matches[h] = a_match
+                                a_match = RegExMatch(rel_path=rel_path,
+                                                    line_match=line.strip(),
+                                                    regex_match=mo.group(),
+                                                    match_pos=RegExMatchPosition(
+                                                    mo.start(),
+                                                    mo.end()))
+
+                                matches[h] = a_match
 
                                 #print(f"Start: {mo.start()}, End: {mo.end()}, Group: {mo.group()}")
                                 #matches[h] = (rel_path, mo.group(), line.strip())
@@ -241,7 +241,7 @@ class Appalyzer():
         return matches
 
 
-    def _extract(self, pattern_name:str, matches:dict[str, RegEx_Match]) -> None:
+    def _extract(self, pattern_name:str, matches:dict[str, RegExMatch]) -> None:
         """
         Process any matches that have been found
 
@@ -284,16 +284,15 @@ class Appalyzer():
                             idx_start = line.find(secret)
                             idx_end = idx_start + len(secret)
 
-                            
                             # Get the offset positions
                             left_pos = idx_start - Appalyzer.TRUNCATE_OFFSET
                             right_pos = idx_end + Appalyzer.TRUNCATE_OFFSET
 
                             # Do some checking to make sure we don't go out of bounds
-                            if (left_pos < 0):
+                            if left_pos < 0:
                                 left_pos = 0
 
-                            if (right_pos > line_length):
+                            if right_pos > line_length:
                                 right_pos = line_length
 
                             # Get the new line to print to file
@@ -328,7 +327,7 @@ class Appalyzer():
 
             Appalyzer.logger.debug("[*] Starting thread %s for %s", a_thread.ident, name)
 
-        # Wait for the threads to finish or timeout is het
+        # Wait for the threads to finish or timeout is hit
         _ = [t.join(timeout=500) for t in thread_list]
 
         for thread in thread_list:

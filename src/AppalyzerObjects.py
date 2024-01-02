@@ -1,7 +1,8 @@
+"""Module of DataClasses used in Appalyzer"""
 import dataclasses
 
 @dataclasses.dataclass
-class RegEx_Match_Position:
+class RegExMatchPosition:
     '''
     Star and End position of match
     '''
@@ -10,14 +11,14 @@ class RegEx_Match_Position:
 
 
 @dataclasses.dataclass
-class RegEx_Match:
+class RegExMatch:
     '''
     Regex Match
     '''
     rel_path: str
     line_match: str
     regex_match: str
-    match_pos: RegEx_Match_Position
+    match_pos: RegExMatchPosition
 
 @dataclasses.dataclass
 class FileObj:
@@ -26,5 +27,4 @@ class FileObj:
     '''
     file_path: str
     file_contents: str
-    matches: list[RegEx_Match]
-
+    matches: list[RegExMatch]
