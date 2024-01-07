@@ -16,6 +16,8 @@ TYPES = ['android','ios']
 FILE_EXT = ['apk', 'ipa', 'zip', 'jar', 'dll']
 
 def banner():
+	"""ASCII Art banner"""
+
 	print("""
 		
                                      _                               
@@ -69,6 +71,7 @@ def configure_logging():
 
 
 def main():
+	"""Main Execution Module for Appalyzer"""
 
 	# Print Banner
 	banner()

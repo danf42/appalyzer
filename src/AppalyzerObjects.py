@@ -16,8 +16,10 @@ class RegExMatch:
     Regex Match
     '''
     rel_path: str
+    absolute_path: str
     line_match: str
     regex_match: str
+    regex_name: str
     match_pos: RegExMatchPosition
 
 @dataclasses.dataclass
