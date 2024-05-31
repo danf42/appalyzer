@@ -8,6 +8,7 @@ import subprocess
 import hashlib
 import concurrent.futures
 from pathlib import Path
+import magic
 from AppAnalyzerConfig import AppAnalyzerConfig
 from AppalyzerObjects import RegExMatchPosition, RegExMatch
 
@@ -134,7 +135,7 @@ class Appalyzer():
             fd.write(f"{Appalyzer.SECTION_BREAK}\n\n")
 
 
-    def _run_strings(self, afile:str) -> None:
+    def _run_strings(self, afile:str) -> str:
         """
         Run strings on a file
         """
@@ -148,7 +149,9 @@ class Appalyzer():
             proc = subprocess.Popen(strcmd, stdout=fd)
             proc.wait()
 
-        Appalyzer.logger.debug("Result written to %s", outfile)
+        Appalyzer.logger.debug("Strings written to %s", outfile)
+
+        return outfile
 
 
     def _get_dir_listing(self, target_dir:str) -> list[str]:
@@ -202,9 +205,23 @@ class Appalyzer():
             Appalyzer.logger.debug("[*]Skipping scanning for %s", filename)
             return None
 
+        # Get the file type, run strings on non-text files
+        m = magic.Magic(mime=True)
+
+        mimetype = m.from_file(filename)
+
         try:
-            with open(filename, "r", encoding="utf-8", errors='ignore') as fd:
-                content = fd.read()
+
+            Appalyzer.logger.debug("[*]%s mimetype is %s", filename, mimetype)
+
+            if 'text' in mimetype:
+                with open(filename, "r", encoding="utf-8", errors='ignore') as fd:
+                    content = fd.read()
+
+            else:
+                strings_filename = self._run_strings(filename)
+                with open(strings_filename, "r", encoding="utf-8", errors='ignore') as fd:
+                    content = fd.read()
 
         except Exception as err:
             Appalyzer.logger.error("\n[!]Error: %s\n", err)
